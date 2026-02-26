@@ -1,0 +1,279 @@
+@import url('https://fonts.googleapis.com');
+
+
+.glass-app { background: var(--app-bg); width: 100vw; height: 100vh; display: flex; }
+.sidebar { background: var(--sidebar-bg); width: 350px; }
+.chat-window { flex: 1; display: flex; flex-direction: column; background-size: cover; background-position: center; }
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    display: flex; justify-content: center; align-items: center; overflow: hidden;
+}
+
+.auth-overlay, .call-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    backdrop-filter: blur(25px); display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+.auth-overlay { background: rgba(0,0,0,0.7); }
+.call-overlay { background: rgba(15, 23, 42, 0.95); z-index: 3000; }
+
+.auth-card {
+    background: rgba(255,255,255,0.1); padding: 40px; border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.2); text-align: center; color: white; width: 350px;
+}
+.auth-card input {
+    width: 100%; margin: 10px 0; padding: 12px; border-radius: 12px; border: none;
+    background: rgba(255,255,255,0.2); color: white; outline: none;
+}
+.auth-buttons { display: flex; gap: 10px; margin-top: 15px; }
+.auth-buttons button { flex: 1; padding: 12px; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; }
+
+.glass-app {
+    width: 100vw; height: 100vh; background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px); border-radius: 30px; display: flex;
+    border: 1px solid rgba(255,255,255,0.2); overflow: hidden;
+}
+
+.sidebar { width: 280px; background: rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.1); }
+.sidebar-header { padding: 25px; color: white; font-size: 20px; font-weight: 600; }
+.chat-item { padding: 20px; color: white; cursor: pointer; transition: 0.3s; }
+.chat-item.active { background: rgba(255,255,255,0.1); border-left: 4px solid #4facfe; }
+
+.chat-window { flex: 1; display: flex; flex-direction: column; }
+.chat-header { padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.messages-container { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+
+.message { padding: 12px 18px; border-radius: 18px; color: white; max-width: 75%; font-size: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.message strong { font-size: 11px; opacity: 0.7; display: block; margin-bottom: 4px; text-transform: uppercase; }
+.sent { background: #4facfe; align-self: flex-end; border-bottom-right-radius: 4px; }
+.received { background: rgba(255,255,255,0.15); align-self: flex-start; border-bottom-left-radius: 4px; }
+
+.call-card { position: relative; width: 90%; height: 90%; background: #000; border-radius: 30px; overflow: hidden; }
+#remoteVideo { width: 100%; height: 100%; object-fit: cover; }
+#localVideo { position: absolute; top: 20px; right: 20px; width: 200px; border-radius: 15px; border: 2px solid rgba(255,255,255,0.3); }
+.call-actions { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; }
+.call-btn { width: 55px; height: 55px; border-radius: 50%; border: none; cursor: pointer; font-size: 22px; background: rgba(255,255,255,0.2); color: white; transition: 0.3s; }
+.call-btn:hover { background: rgba(255,255,255,0.4); }
+.call-btn.hangup { background: #ff4b2b; }
+
+.input-bar { padding: 20px; display: flex; gap: 15px; background: rgba(0,0,0,0.1); align-items: center; }
+.input-bar input { flex: 1; padding: 14px; border-radius: 12px; border: none; background: rgba(255,255,255,0.1); color: white; outline: none; }
+#sendBtn { padding: 12px 25px; border-radius: 12px; border: none; background: white; color: #1e3c72; font-weight: 600; cursor: pointer; }
+.icon-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; opacity: 0.7; transition: 0.2s; }
+.icon-btn:hover { opacity: 1; transform: scale(1.1); }
+audio { filter: invert(1); width: 220px; margin-top: 10px; }
+img { max-width: 100%; border-radius: 10px; margin-top: 5px; }
+.recording { color: #ff4b2b !important; }
+/* Эффект наведения для кнопки Отправить */
+#sendBtn {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+#sendBtn:hover {
+    background: #4facfe; /* Синий цвет при наведении */
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#sendBtn:active {
+    transform: translateY(0);
+}
+
+/* Визуализация записи ГС */
+.recording-active {
+    color: #ff4b2b !important; /* Красный цвет иконки */
+    background: rgba(255, 75, 43, 0.1);
+    border-radius: 50%;
+    animation: pulse-red 1.2s infinite;
+}
+
+@keyframes pulse-red {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0.4); }
+    70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(255, 75, 43, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0); }
+}
+/* Время сообщения */
+.msg-time {
+    font-size: 10px;
+    opacity: 0.5;
+    display: block;
+    text-align: right;
+    margin-top: 4px;
+}
+
+/* Анимация появления сообщений */
+@keyframes msgBounce {
+    0% { opacity: 0; transform: translateY(20px) scale(0.8); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.message {
+    animation: msgBounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Индикатор печати */
+.typing-indicator {
+    padding: 10px 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    display: none; /* Включаем через JS */
+    width: fit-content;
+    margin-bottom: 10px;
+}
+
+.dot {
+    width: 6px; height: 6px; background: white; border-radius: 50%;
+    display: inline-block; margin-right: 3px; animation: dotPulse 1.5s infinite;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+}
+/* Стиль самого кружочка в чате */
+.video-note {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+    background: #000;
+}
+
+/* Превью при записи (плавающее над кнопкой) */
+#video-record-preview {
+    position: absolute;
+    bottom: 80px;
+    right: 20px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ff4b2b;
+    display: none;
+    transform: scaleX(-1); /* Зеркально для удобства */
+}
+/* ВЫДВИЖНОЕ МЕНЮ НАСТРОЕК */
+#settings-modal {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Изначально спрятано за правым краем */
+    width: 380px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(40px); /* Сильное размытие фона */
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 5000;
+    transition: right 0.4s cubic-bezier(0.1, 0.7, 0.1, 1); /* Плавный выезд */
+    padding: 30px;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+/* Класс для активации меню (добавляется через JS) */
+#settings-modal.active {
+    right: 0;
+}
+
+/* Группировка элементов внутри настроек */
+.settings-group {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.settings-group p {
+    font-size: 11px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.settings-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    outline: none;
+}
+
+/* Кнопка закрытия внизу */
+.close-btn {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.2) !important;
+    margin-top: auto;
+}
+/* 1. СТИЛЬ ПРИЗРАЧНОГО ТЕКСТА (GHOST TYPING) */
+.ghost-text {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5); /* Полупрозрачный белый */
+    filter: blur(4px);              /* Эффект сильного размытия */
+    margin-left: 12px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* 2. ВИЗУАЛИЗАЦИЯ ВИДЕО-КРУЖОЧКА В ЧАТЕ */
+.video-note {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;     /* Делаем видео круглым */
+    object-fit: cover;
+    border: 2px solid #4facfe;
+    background: #000;
+    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+
+/* 3. АНИМАЦИЯ ПУЛЬСАЦИИ ПРИ ЗАПИСИ (ГС/ВИДЕО) */
+.recording-active {
+    color: #ff4b2b !important;
+    animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* 4. КОРРЕКЦИЯ ВРЕМЕНИ СООБЩЕНИЯ */
+.msg-time {
+    display: block;
+    font-size: 10px;
+    opacity: 0.5;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* 5. ПРЕДПРОСМОТР ВИДЕО ПРИ ЗАПИСИ */
+#video-record-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ff4b2b;
+    position: absolute;
+    bottom: 90px;
+    right: 25px;
+    display: none;
+    z-index: 100;
+    transform: scaleX(-1); /* Зеркальное отображение как в зеркале */
+}

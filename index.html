@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Glass Messenger</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+
+    <!-- ЭКРАН ВХОДА И РЕГИСТРАЦИИ -->
+    <div id="auth-screen" class="auth-overlay">
+        <div class="auth-card">
+            <h2>Вход в Messenger</h2>
+            <input type="text" id="username" placeholder="Логин" autocomplete="off">
+            <input type="password" id="password" placeholder="Пароль">
+            <div class="auth-buttons">
+                <button id="loginBtn">Войти</button>
+                <button id="regBtn">Регистрация</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ОСНОВНОЙ ИНТЕРФЕЙС ПРИЛОЖЕНИЯ -->
+    <div class="glass-app">
+        <!-- БОКОВАЯ ПАНЕЛЬ -->
+        <aside class="sidebar">
+            <div class="sidebar-header">Чаты</div>
+            <div class="chat-list">
+                <div class="chat-item active" data-user="Алексей">Алексей</div>
+                <div class="chat-item" data-user="Мария">Мария</div>
+                <div class="chat-item" data-user="Поддержка AI">Поддержка AI</div>
+            </div>
+        </aside>
+
+        <!-- ОКНО ЧАТА -->
+        <main class="chat-window" id="mainChatWindow">
+            <header class="chat-header">
+                <h3 id="current-chat-name">Алексей</h3>
+                <div class="call-controls">
+                    <button id="settingsBtn" class="icon-btn">⚙️</button>
+                    <button id="videoCallBtn" class="icon-btn">📹</button>
+                </div>
+            </header>
+            
+            <div class="messages-container" id="chatBox">
+                <!-- Превью записи видео-кружочка -->
+                <video id="video-record-preview" autoplay muted playsinline></video>
+                
+                <!-- Индикатор печати -->
+                <div id="typing-box" class="typing-indicator">
+                    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+
+            <!-- ПАНЕЛЬ ВВОДА -->
+            <div class="input-bar">
+                <label class="icon-btn" title="Прикрепить фото">
+                    📎<input type="file" id="imageInput" accept="image/*" style="display:none">
+                </label>
+                
+                <!-- Кнопка медиа (ГС/Видео) -->
+                <button id="mediaBtn" class="icon-btn">🎤</button> 
+                
+                <input type="text" id="messageInput" placeholder="Напишите сообщение..." autocomplete="off">
+                <button id="sendBtn">Отправить</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- ВЫДВИЖНОЕ МЕНЮ НАСТРОЕК (СПРАВА) -->
+    <div id="settings-modal">
+        <div class="settings-card">
+            <h3>Настройки системы</h3>
+            
+            <div class="settings-group">
+                <p>Тема оформления</p>
+                <div class="auth-buttons">
+                    <button id="setLightTheme">⚪ Светлая</button>
+                    <button id="setDarkTheme">⚫ Темная</button>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <p>Шрифт текста</p>
+                <select id="fontSelect" class="settings-select">
+                    <option value="'Inter', sans-serif">Inter (Стандарт)</option>
+                    <option value="'Arial', sans-serif">Arial</option>
+                    <option value="monospace">Courier (Печатный)</option>
+                    <option value="serif">Georgia (Классика)</option>
+                </select>
+            </div>
+
+            <div class="settings-group">
+                <p>Обои чата</p>
+                <input type="file" id="bgImageInput" accept="image/*">
+                <button id="resetBgBtn" style="margin-top:10px; font-size:11px;">🔄 Сбросить обои</button>
+            </div>
+
+            <button id="clearChatBtn" class="danger-btn" style="background: #ff4b2b; color: white; width: 100%; border: none; padding: 10px; border-radius: 10px; cursor: pointer; margin-top: 20px;">🗑️ Очистить историю</button>
+            <button id="closeSettingsBtn" class="close-btn" style="width:100%; margin-top:10px; padding: 10px; border-radius: 10px; cursor: pointer;">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- КОНТЕКСТНОЕ МЕНЮ СООБЩЕНИЙ -->
+    <div id="context-menu" style="position: fixed; display: none; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); border-radius: 10px; z-index: 9999; border: 1px solid rgba(255,255,255,0.2); padding: 5px;">
+        <div class="context-item" id="ctx-edit" style="padding: 10px 20px; color: white; cursor: pointer; border-radius: 5px;">✏️ Изменить</div>
+        <div class="context-item" id="ctx-delete" style="padding: 10px 20px; color: #ff4b2b; cursor: pointer; border-radius: 5px;">🗑️ Удалить</div>
+    </div>
+
+    <!-- ИНТЕРФЕЙС ВИДЕОЗВОНКА -->
+    <div id="call-interface" class="call-overlay" style="display: none;">
+        <div class="call-card">
+            <video id="remoteVideo" autoplay playsinline></video>
+            <div class="remote-name" id="calling-user-name">Звонок...</div>
+            <video id="localVideo" autoplay playsinline muted></video>
+            <div class="call-actions">
+                <button id="toggleMic" class="call-btn">🎤</button>
+                <button id="toggleCam" class="call-btn">📷</button>
+                <button id="shareScreenBtn" class="call-btn">🖥️</button>
+                <button id="endCallBtn" class="call-btn hangup">📞</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ВАЖНО: ПОРЯДОК ПОДКЛЮЧЕНИЯ FIREBASE -->
+    <script src="https://www.gstatic.com"></script>
+    <script src="https://www.gstatic.com"></script>
+    <script src="https://www.gstatic.com"></script>
+
+    <!-- ТВОЙ СКРИПТ ВСЕГДА ПОСЛЕДНИЙ -->
+    <script src="script.js"></script>
+</body>
+</html>
